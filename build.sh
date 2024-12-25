@@ -56,10 +56,19 @@ cp -a layout "$bundle"
 MacOSX_SDK="$(basename "$dev_dir"/Platforms/MacOSX.platform/Developer/SDKs/MacOSX*.*.sdk)"
 iPhoneOS_SDK="$(basename "$dev_dir"/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS*.*.sdk)"
 iPhoneSimulator_SDK="$(basename "$dev_dir"/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.*.sdk)"
+
+# get base sdk version and add it to the target tuple
+MacOSX_SDK_Version="${MacOSX_SDK:6:-4}"
+iPhoneOS_SDK_Version="${iPhoneOS_SDK:8:-4}"
+iPhoneSimulator_SDK_Version="${iPhoneSimulator_SDK:15:-4}"
+
 sed \
-    -e 's/$MacOSX_SDK/'"$MacOSX_SDK"'/g' \
-    -e 's/$iPhoneOS_SDK/'"$iPhoneOS_SDK"'/g' \
-    -e 's/$iPhoneSimulator_SDK/'"$iPhoneSimulator_SDK"'/g' \
+    -e "s/\$MacOSX_SDK_Version/$MacOSX_SDK_Version/g" \
+    -e "s/\$iPhoneOS_SDK_Version/$iPhoneOS_SDK_Version/g" \
+    -e "s/\$iPhoneSimulator_SDK_Version/$iPhoneSimulator_SDK_Version/g" \
+    -e "s/\$MacOSX_SDK/$MacOSX_SDK/g" \
+    -e "s/\$iPhoneOS_SDK/$iPhoneOS_SDK/g" \
+    -e "s/\$iPhoneSimulator_SDK/$iPhoneSimulator_SDK/g" \
     templates/swift-sdk.json > "$bundle/swift-sdk.json"
 echo "${DARWIN_SDK_VERSION:-develop}" > "$bundle/darwin-sdk-version.txt"
 
